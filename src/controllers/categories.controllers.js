@@ -1,25 +1,38 @@
-const path = require('path');
-const CategoriesService = require('../services/categories.services');
-const ProductService = require('../services/products.services');
+const {
+  getAll,
+  getById,
+  getSubCategories,
+  getMainCategories,
+  getBrands
+} = require('../services/categoryRepository');
 
 module.exports = {
-  all: (req, res) => {
-    let products;
-    let filter;
-    if (req.query && req.query.id) {
-      filter = { category: req.query.id };
-    }
+  all: async (req, res) => {
+    const categories = await getAll();
+    
+    res.send(categories);
+  },
+  mainCategories: async (req, res) => {
+    const categories = await getMainCategories();
 
-    products = ProductService.getAll(filter);
-    const categories = CategoriesService.getAll({
-      input: { populate: true },
-      filter: 'isMain',
-    });
+    res.send(categories);
+  },
+  details: async(req,res)=>{
+    const categoryId = req.params.category_id;
+    const category = await getById(categoryId);
 
-    return res.render(path.resolve(__dirname, '../views/products/products'), {
-      products,
-      categories,
-      user: req.session.user,
-    });
+    res.send(category);
+  },
+  subCategories: async (req, res) => {
+    const categoryId = req.params.category_id;    
+    const category = await getSubCategories(categoryId);
+
+    res.send(category);
+  },
+  getBrands: async (req, res) => {
+    const categoryId = req.params.category_id;    
+    const category = await getBrands(categoryId);
+
+    res.send(category);
   },
 };

@@ -4,5 +4,6 @@ const controller = require('../controllers/users.controllers.js');
 const logger = require('../middlewares/logger.js');
 
 router.get('/profile/:id',controller.profile);
+// cart endpoint
 
 module.exports = router;
